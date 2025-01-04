@@ -36,11 +36,11 @@ const staticText = {
     `Back left: ${backLeft.toFixed(1)} ${isMetric ? 'kPa' : 'psi'}`,
   backRight: (backRight) =>
     `Back right: ${backRight.toFixed(1)} ${isMetric ? 'kPa' : 'psi'}`,
-  lock: 'Lock',
-  unlock: 'Unlock',
+  lock: 'Verouillé véhicule',
+  unlock: 'Dévérouillé véhicule',
   startCharge: 'Start charge',
   stopCharge: 'Stop charge',
-  disconnect: 'Disconnect',
+  disconnect: 'Déconnexion',
   disconnectAll: 'Disconnect all',
 };
 

@@ -4,9 +4,9 @@ import { config } from './config';
  */
 export const formatName = (name) => {
   const displayNames = {
-    CHARGING: 'Charging',
-    FULLY_CHARGED: 'Fully charged',
-    NOT_CHARGING: 'Not charging',
+    CHARGING: 'Chargement cours',
+    FULLY_CHARGED: 'Charge complète',
+    NOT_CHARGING: 'Débranché',
   };
 
   return displayNames[name] || name;

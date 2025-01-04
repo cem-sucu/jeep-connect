@@ -137,7 +137,7 @@ const properties = {
     permission: 'read_location',
     requestType: 'GET',
     componentType: 'VehiclePropertyList',
-    text: 'Location',
+    text: 'Localisation',
   },
   lockUnlock: {
     name: 'lockUnlock',
