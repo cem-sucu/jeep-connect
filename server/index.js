@@ -1,4 +1,6 @@
 'use strict';
+require('dotenv').config();
+
 
 const cors = require('cors');
 const express = require('express');
@@ -291,5 +293,31 @@ app.post('/smartcar-webhook', async function(req, res) {
     res.status(500).json({ error: 'Unknown event type'})
   }
 })
+
+
+
+//! ----------------------------------------------------------------
+
+// Middleware pour logger les requêtes
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next(); // Passer au middleware suivant
+});
+
+// Route par défaut
+app.get('/', (req, res) => {
+  console.log('GET request to /');
+  res.status(200).send('Welcome to the Smartcar API!');
+});
+
+// ... toutes tes routes ici ...
+
+// Middleware pour gérer les erreurs
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log l'erreur dans la console
+  res.status(500).send('Something went wrong!');
+});
+
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

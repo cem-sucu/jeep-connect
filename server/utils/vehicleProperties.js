@@ -191,6 +191,7 @@ const vehicleProperties = {
     process: (batchResponse) => {
       try {
         const vin = batchResponse.vin();
+        console.log('VIN:', vin.vin);
         return vin.vin;
       } catch (err) {
         return handleError(err);

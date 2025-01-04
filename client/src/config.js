@@ -299,7 +299,7 @@ const buildYourOwnConfig = {
    * Section 1: Personalize your app!
    */
   staticText: {
-    appName: "[Your app's name]",
+    appName: "[ JEEP CONNECTE ]",
     loadingMessage: 'Loading...',
   },
 
@@ -323,7 +323,18 @@ const buildYourOwnConfig = {
     properties.attributes, // do not change, used to render select dropdown
   ],
   vehicleProperties: [
-    properties.vin,
+    // properties.vin, // le VIN du véhicule
+    properties.batteryLevel, // niveau de la batterie
+    properties.location, // emplacement GPS
+    properties.odometer, // distance totale parcourue avec véhicule
+    properties.chargeState, // voir status de batterie en charge ou non
+    properties.chargeCompletion, // savoir combien de temps il reste pour arrivé a 100% d'autonomie
+    properties.evRange, // distance parcourable restante
+    properties.setChargeLimit, // permet de choisir jusqu'a quel pourcentage de batterie charger le véhicule
+    properties.lockUnlock, // vérouillé |dévérouiller le véhicule
+    properties.disconnect,
+
+    
     // properties.someVehicleProperty,
   ],
 };

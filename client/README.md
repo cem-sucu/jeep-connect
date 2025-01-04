@@ -6,7 +6,7 @@ By now, you should have created a Smartcar account and have obtained `client-id`
 
 Set these as environment variables:
 ```bash
-$ export REACT_APP_CLIENT_ID=<your-client-id>
+$ export REACT_APP_CLIENT_ID=a982d41c-53fd-4443-ae8d-dba2b46d300f
 $ export REACT_APP_REDIRECT_URI=https://javascript-sdk.smartcar.com/v2/redirect?app_origin=http://localhost:3000
 $ export REACT_APP_SERVER=http://localhost:8000
 ```
