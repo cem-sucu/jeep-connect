@@ -308,7 +308,7 @@ const buildYourOwnConfig = {
    * You can also do this directly where smartcar gets instantiated in App.jsx
    */
   mode: 'live', // one of ['live', 'simulated']
-  unitSystem: 'imperial',
+  unitSystem: 'metric',  // pour choisiir si je veux en Kilomètre ou miles imperial ou metric
   brandSelect: '',
   singleSelect: false,
 
