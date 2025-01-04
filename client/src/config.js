@@ -39,7 +39,7 @@ const properties = {
     permission: 'read_battery',
     requestType: 'GET',
     componentType: 'VehicleProperty',
-    text: 'Battery level',
+    text: 'Niveau de batterie',
   },
   batteryCapacity: {
     name: 'batteryCapacity',
@@ -84,7 +84,7 @@ const properties = {
     permission: 'read_charge',
     requestType: 'GET',
     componentType: 'VehicleProperty',
-    text: 'Current state',
+    text: 'Status de chargement',
   },
   disconnect: {
     name: 'disconnect',
@@ -106,7 +106,7 @@ const properties = {
     permission: 'read_battery',
     requestType: 'GET',
     componentType: 'VehicleProperty',
-    text: 'Range',
+    text: 'Distance restante avec l\'autonomie',
   },
   // Note: The fuel tank API is only available for vehicles sold in the United States.
   fuel: {
@@ -151,7 +151,7 @@ const properties = {
     permission: 'read_odometer',
     requestType: 'GET',
     componentType: 'VehicleProperty',
-    text: 'Odometer',
+    text: 'Distance total parcouru',
   },
   // requires isPluggedIn and chargeState to show
   startStopCharge: {
@@ -324,14 +324,14 @@ const buildYourOwnConfig = {
   ],
   vehicleProperties: [
     // properties.vin, // le VIN du véhicule
+    properties.lockUnlock, // vérouillé |dévérouiller le véhicule
     properties.batteryLevel, // niveau de la batterie
+    properties.evRange, // distance parcourable restante
     properties.location, // emplacement GPS
     properties.odometer, // distance totale parcourue avec véhicule
     properties.chargeState, // voir status de batterie en charge ou non
     properties.chargeCompletion, // savoir combien de temps il reste pour arrivé a 100% d'autonomie visible seulement si véhicule en charge
-    properties.evRange, // distance parcourable restante
     properties.setChargeLimit, // permet de choisir jusqu'a quel pourcentage de batterie charger le véhicule
-    properties.lockUnlock, // vérouillé |dévérouiller le véhicule
     properties.disconnect,
 
     
