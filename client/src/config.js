@@ -328,7 +328,7 @@ const buildYourOwnConfig = {
     properties.location, // emplacement GPS
     properties.odometer, // distance totale parcourue avec véhicule
     properties.chargeState, // voir status de batterie en charge ou non
-    properties.chargeCompletion, // savoir combien de temps il reste pour arrivé a 100% d'autonomie
+    properties.chargeCompletion, // savoir combien de temps il reste pour arrivé a 100% d'autonomie visible seulement si véhicule en charge
     properties.evRange, // distance parcourable restante
     properties.setChargeLimit, // permet de choisir jusqu'a quel pourcentage de batterie charger le véhicule
     properties.lockUnlock, // vérouillé |dévérouiller le véhicule
