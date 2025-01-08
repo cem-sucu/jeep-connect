@@ -1,6 +1,6 @@
 import React from 'react';
 const staticText = {
-  connectVehicle: "Connect your vehicle to get started.",
+  connectVehicle: "Connecte ta jeep.",
   connectButton: "Connect"
 }
 
