@@ -6,6 +6,7 @@ import { getPermissions } from './utils';
 import { config } from './config';
 
 import { Connect, Vehicle, Loading } from './components';
+import Map from './components/Maps'; 
 
 const App = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -142,6 +143,13 @@ const App = () => {
                 updateProperty={updateProperty}
                 setError={setError}
               />
+              {/* Affichage de la carte avec les coordonnées du véhicule sélectionné */}
+              {selectedVehicle.location && (
+                <Map
+                  latitude={selectedVehicle.location.latitude}
+                  longitude={selectedVehicle.location.longitude}
+                />
+              )}
             </>
           ) : (
             <Connect onClick={authorize} />

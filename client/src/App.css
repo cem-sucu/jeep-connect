@@ -266,6 +266,8 @@ select.vehicles {
 
 
 /** ajout personel */
+@import 'leaflet/dist/leaflet.css';
+
 #lockUnlock, #disconnect {
   display: flex; /* Utiliser flexbox */
   justify-content: center; /* Centrer horizontalement */
