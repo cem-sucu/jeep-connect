@@ -22,6 +22,8 @@ const Map = ({ latitude, longitude, destination }) => {
   const [address, setAddress] = useState('');
   const position = [latitude, longitude];
   const [route, setRoute] = useState([]);
+  const [destinationAddress, setDestinationAddress] = useState('');
+
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -45,6 +47,10 @@ const Map = ({ latitude, longitude, destination }) => {
           const response = await axios.get(`https://router.project-osrm.org/route/v1/driving/${longitude},${latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson`);
           const route = response.data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
           setRoute(route);
+
+          const destinationResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${destination.latitude}&lon=${destination.longitude}`);
+          const destinationAddress = destinationResponse.data.display_name || 'Adresse non trouvée';
+          setDestinationAddress(destinationAddress);
         } catch (error) {
           console.error('Erreur lors de la récupération du trajet:', error);
         }
@@ -71,7 +77,7 @@ const Map = ({ latitude, longitude, destination }) => {
       {destination && (
         <Marker position={[destination.latitude, destination.longitude]} icon={defaultIcon}>
           <Popup>
-            Destination: {address}
+            Destination: {destinationAddress}
           </Popup>
         </Marker>
       )}
