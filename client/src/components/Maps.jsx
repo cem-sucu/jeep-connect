@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
 
-// Importation des images des marqueurs
+// Importer des images des marqueurs
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -18,16 +18,16 @@ const defaultIcon = L.icon({
   shadowSize: [41, 41],
 });
 
-const Map = ({ latitude, longitude }) => {
+const Map = ({ latitude, longitude, destination }) => {
   const [address, setAddress] = useState('');
   const position = [latitude, longitude];
+  const [route, setRoute] = useState([]);
 
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyA5CFCsqcYY0S9AU9w2Wv3cIw6E7ksWqAw`);
-        console.log('Réponse de l\'API:', response.data); // Ajout du log pour la réponse de l'API
-        const address = response.data.results[0]?.formatted_address || 'Adresse non trouvée';
+        const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+        const address = response.data.display_name || 'Adresse non trouvée';
         setAddress(address);
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'adresse:', error);
@@ -37,6 +37,24 @@ const Map = ({ latitude, longitude }) => {
 
     fetchAddress();
   }, [latitude, longitude]);
+
+  useEffect(() => {
+    if (destination) {
+      const fetchRoute = async () => {
+        try {
+          const response = await axios.get(`https://router.project-osrm.org/route/v1/driving/${longitude},${latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson`);
+          const route = response.data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+          setRoute(route);
+        } catch (error) {
+          console.error('Erreur lors de la récupération du trajet:', error);
+        }
+      };
+
+      fetchRoute();
+    } else {
+      setRoute([]); // Réinitialiser la route si la destination est null
+    }
+  }, [destination, latitude, longitude]);
 
   return (
     <MapContainer center={position} zoom={13} style={{ height: '400px', width: '100%' }}>
@@ -50,6 +68,16 @@ const Map = ({ latitude, longitude }) => {
           Adresse: {address}
         </Popup>
       </Marker>
+      {destination && (
+        <Marker position={[destination.latitude, destination.longitude]} icon={defaultIcon}>
+          <Popup>
+            Destination: {address}
+          </Popup>
+        </Marker>
+      )}
+      {route.length > 0 && (
+        <Polyline positions={route} color="blue" />
+      )}
     </MapContainer>
   );
 };
