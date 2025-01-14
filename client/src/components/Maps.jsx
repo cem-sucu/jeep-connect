@@ -23,6 +23,7 @@ const Map = ({ latitude, longitude, destination }) => {
   const position = [latitude, longitude];
   const [route, setRoute] = useState([]);
   const [destinationAddress, setDestinationAddress] = useState('');
+  const [distance, setDistance] = useState(null);
 
 
   useEffect(() => {
@@ -51,6 +52,9 @@ const Map = ({ latitude, longitude, destination }) => {
           const destinationResponse = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${destination.latitude}&lon=${destination.longitude}`);
           const destinationAddress = destinationResponse.data.display_name || 'Adresse non trouvée';
           setDestinationAddress(destinationAddress);
+
+		  const distance = response.data.routes[0].distance;
+		  setDistance(distance);
         } catch (error) {
           console.error('Erreur lors de la récupération du trajet:', error);
         }
@@ -59,32 +63,44 @@ const Map = ({ latitude, longitude, destination }) => {
       fetchRoute();
     } else {
       setRoute([]); // Réinitialiser la route si la destination est null
+	  setDestinationAddress(''); // réinitialisé
+	  setDistance(null); // réinitialisé
     }
   }, [destination, latitude, longitude]);
 
   return (
-    <MapContainer center={position} zoom={13} style={{ height: '400px', width: '100%' }}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker position={position} icon={defaultIcon}>
-        <Popup>
-          Latitude: {latitude}, Longitude: {longitude}<br />
-          Adresse: {address}
-        </Popup>
-      </Marker>
-      {destination && (
-        <Marker position={[destination.latitude, destination.longitude]} icon={defaultIcon}>
+    <div style={{ display: 'flex' }}>
+      <MapContainer center={position} zoom={13} style={{ height: '400px', width: '70%' }}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <Marker position={position} icon={defaultIcon}>
           <Popup>
-            Destination: {destinationAddress}
+            Latitude: {latitude}, Longitude: {longitude}<br />
+            Adresse: {address}
           </Popup>
         </Marker>
-      )}
-      {route.length > 0 && (
-        <Polyline positions={route} color="blue" />
-      )}
-    </MapContainer>
+        {destination && (
+          <Marker position={[destination.latitude, destination.longitude]} icon={defaultIcon}>
+            <Popup>
+              Destination: {destinationAddress}
+            </Popup>
+          </Marker>
+        )}
+        {route.length > 0 && (
+          <Polyline positions={route} color="blue" />
+        )}
+      </MapContainer>
+      <div style={{ marginLeft: '20px', padding: '10px', border: '1px solid #ccc', width: '30%' }}>
+        <h3>Informations sur le trajet</h3>
+        {distance !== null ? (
+          <p>Distance: {(distance / 1000).toFixed(2)} km</p>
+        ) : (
+          <p>Aucune destination définie</p>
+        )}
+      </div>
+    </div>
   );
 };
 
