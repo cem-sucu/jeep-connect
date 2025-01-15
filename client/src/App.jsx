@@ -183,6 +183,8 @@ const App = () => {
                   latitude={selectedVehicle.location.latitude}
                   longitude={selectedVehicle.location.longitude}
                   destination={destination}
+                  evRange={selectedVehicle.evRange}
+                  batteryLevel={selectedVehicle.batteryLevel} // en rajoutant ceux la on peux utiliser les donné du vehicule dans le fichier map
                 />
               )}
             </>
