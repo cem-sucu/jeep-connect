@@ -13,8 +13,10 @@ body {
 }
 
 .content {
-  width: 100%;
+  width: 101%;
   max-width: 600px;
+  margin-top: -5%;
+
 }
 
 @media screen and (min-width: 1200px) {
@@ -266,8 +268,88 @@ select.vehicles {
 
 
 /** ajout personel */
-
 @import 'leaflet/dist/leaflet.css';
+
+#logoJeep{
+  width: 106%;
+  margin-left: -3%;
+  height: 7%;
+  margin-top: -10%;
+  object-fit: cover;
+}
+.buttonSee{
+  width: -webkit-fill-available;
+}
+
+.map-container {
+  position: relative;
+  height: 91vh;
+  width: 100vw;
+}
+
+.map {
+  height: 100%;
+  width: 100%;
+}
+
+.info-container {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 8px;
+}
+
+.info-container form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.info-container input {
+  flex: 1;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.info-container button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.info-container button[type="button"] {
+  background-color: #dc3545;
+  margin-left: 10px;
+}
+
+.trip-info {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+}
+
+.trip-info h3 {
+  margin-top: 0;
+}
+
+.trip-info p {
+  margin: 5px 0;
+}
+
 /*: fichier properties.jsx */
 #lockUnlock, #disconnect {
   display: flex; /* Utiliser flexbox */

@@ -8,6 +8,7 @@ import { config } from './config';
 import { Connect, Vehicle, Loading } from './components';
 import Map from './components/Maps'; 
 import axios from 'axios';
+import logoJeep from './css/jeep.png'
 
 const App = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -15,6 +16,7 @@ const App = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [destination, setDestination] = useState(null);
+  const [currentView, setCurrentView] = useState('vehicle'); // Ajout de l'état pour la vue actuelle
 
   const onComplete = async (err, code, state) => {
     if (err) {
@@ -40,20 +42,17 @@ const App = () => {
   const smartcar = new Smartcar({
     clientId: process.env.REACT_APP_CLIENT_ID,
     redirectUri: process.env.REACT_APP_REDIRECT_URI,
-    // set scope of permissions: https://smartcar.com/docs/api/#permissions
     scope: getPermissions(),
-    mode: config.mode, // one of ['live', 'simulated']
+    mode: config.mode,
     onComplete,
   });
 
   const authorize = () =>
     smartcar.openDialog({
       forcePrompt: true,
-      // bypass car brand selection screen: https://smartcar.com/docs/api#brand-select
       vehicleInfo: {
         make: config.brandSelect,
       },
-      // only allow users to authenticate ONE vehicle
       singleSelect: config.singleSelect,
     });
 
@@ -83,7 +82,6 @@ const App = () => {
       } catch (error) {
         setError(new Error(error.response?.data?.error || 'Unknown error'));
       }
-      // if disconnect all fails, we'll fetch any remaining vehicles
       try {
         setIsLoading(true);
         const data = await api.getVehicles();
@@ -133,28 +131,33 @@ const App = () => {
     <div className="content-wrapper">
       <div className="content">
         <h1>{config.staticText.appName}</h1>
+        <img src={logoJeep} alt="logo jeep" id="logoJeep"/>
         {isLoading && <Loading />}
         {!isLoading &&
           ((vehicles.length > 0 && vehicles.some((vehicle) => vehicle.id === selectedVehicle.id)) ? (
             <>
-            {/* affichage des donée du véhicule */}
-              <Vehicle
-                info={selectedVehicle}
-                disconnect={disconnect}
-                vehicles={vehicles}
-                setSelectedVehicle={setSelectedVehicle}
-                updateProperty={updateProperty}
-                setError={setError}
-              />
-              {/* Affichage de la carte avec les coordonnées du véhicule sélectionné et de la destination */}
-              {selectedVehicle.location && (
-                <Map
-                  latitude={selectedVehicle.location.latitude}
-                  longitude={selectedVehicle.location.longitude}
-                  destination={destination}
-                  evRange={selectedVehicle.evRange}
-                  batteryLevel={selectedVehicle.batteryLevel} // en rajoutant ceux la on peux utiliser les donné du vehicule dans le fichier map
+              <button className="buttonSee" onClick={() => setCurrentView(currentView === 'vehicle' ? 'map' : 'vehicle')}>
+                {currentView === 'vehicle' ? 'Voir la carte' : 'Voir le véhicule'}
+              </button>
+              {currentView === 'vehicle' ? (
+                <Vehicle
+                  info={selectedVehicle}
+                  disconnect={disconnect}
+                  vehicles={vehicles}
+                  setSelectedVehicle={setSelectedVehicle}
+                  updateProperty={updateProperty}
+                  setError={setError}
                 />
+              ) : (
+                selectedVehicle.location && (
+                  <Map
+                    latitude={selectedVehicle.location.latitude}
+                    longitude={selectedVehicle.location.longitude}
+                    destination={destination}
+                    evRange={selectedVehicle.evRange}
+                    batteryLevel={selectedVehicle.batteryLevel}
+                  />
+                )
               )}
             </>
           ) : (

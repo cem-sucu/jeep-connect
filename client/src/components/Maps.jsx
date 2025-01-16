@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import axios from 'axios';
 import 'leaflet/dist/leaflet.css';
@@ -120,9 +120,40 @@ const Map = ({ latitude, longitude, batteryLevel }) => {
     }
   }, [destination, latitude, longitude, batteryLevel]);
 
+  const TripInfoControl = () => {
+    const map = useMap();
+    useEffect(() => {
+      const infoDiv = L.control({ position: 'bottomleft' });
+
+      infoDiv.onAdd = () => {
+        const div = L.DomUtil.create('div', 'trip-info');
+        div.innerHTML = `
+          <h3>Informations sur le trajet</h3>
+          ${distance !== null ? `
+            <p>Distance: ${(distance / 1000).toFixed(2)} km</p>
+            <p>Consommation d'énergie: ${energyConsumption?.toFixed(2)} kWh</p>
+            <p>Pourcentage de batterie restant: ${newBatterylevel ? newBatterylevel.toFixed(0) + '%' : 'Calcul en cours...'}</p>
+            <p>Autonomie restante: ${remainingAutonomy.toFixed(0)} km</p>
+          ` : `
+            <p>Aucune destination définie</p>
+          `}
+        `;
+        return div;
+      };
+
+      infoDiv.addTo(map);
+
+      return () => {
+        infoDiv.remove();
+      };
+    }, [map, distance, energyConsumption, newBatterylevel, remainingAutonomy]);
+
+    return null;
+  };
+
   return (
-    <div style={{ display: 'flex' }}>
-      <MapContainer center={position} zoom={13} style={{ height: '400px', width: '70%' }}>
+    <div className="map-container">
+      <MapContainer center={position} zoom={13} className="map">
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -143,9 +174,9 @@ const Map = ({ latitude, longitude, batteryLevel }) => {
         {route.length > 0 && (
           <Polyline positions={route} color="blue" />
         )}
+        <TripInfoControl />
       </MapContainer>
-      <div style={{ marginLeft: '20px', padding: '10px', border: '1px solid #ccc', width: '30%' }}>
-        {/* Formulaire pour saisir une adresse */}
+      <div className="info-container">
         <form onSubmit={handleAddressSubmit}>
           <input
             type="text"
@@ -156,18 +187,6 @@ const Map = ({ latitude, longitude, batteryLevel }) => {
           <button type="submit">Valider</button>
           {searchAddress && <button type="button" onClick={handleReset}>Réinitialiser</button>}
         </form>
-        <h3>Informations sur le trajet</h3>
-        {distance !== null ? (
-          <>
-            <p>Distance: {(distance / 1000).toFixed(2)} km</p>
-            <p>Consommation d'énergie: {energyConsumption?.toFixed(2)} kWh</p>
-            <p>Pourcentage de batterie restant: {newBatterylevel ? newBatterylevel.toFixed(0) +'%': 'Calcul en cours...'}</p>
-            <p>Autonomie restante: {remainingAutonomy.toFixed(0)} km</p>
-          </>
-        ) : (
-          <p>Aucune destination définie</p>
-        )}
-        
       </div>
     </div>
   );

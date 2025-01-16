@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../api';
 import Loading from './Loading';
 import { Properties } from './Properties';
+import '../App.css';
 
 const Vehicle = ({
   info,
@@ -51,11 +52,11 @@ const Vehicle = ({
   };
 
   return (
-    <div className="container vehicle">
+    <div className="containerVehicle">
       {/* Renders a select dropdown if multiple vehicles are connected */}
       {vehicles.length === 1 ? (
         <h2>
-          {year} {make} {model}
+          {/* {year} {make} {model} */}
         </h2>
       ) : (
         <div>

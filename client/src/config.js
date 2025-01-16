@@ -299,7 +299,7 @@ const buildYourOwnConfig = {
    * Section 1: Personalize your app!
    */
   staticText: {
-    appName: "[ JEEP CONNECTE ]",
+    // appName: "[ JEEP CONNECTE ]",
     loadingMessage: 'Loading...',
   },
 
