@@ -18,26 +18,49 @@ const defaultIcon = L.icon({
   shadowSize: [41, 41],
 });
 
-const Map = ({ latitude, longitude, destination, batteryLevel }) => {
-  const [address, setAddress] = useState('');
+const Map = ({ latitude, longitude, batteryLevel }) => {
+  const [currentAddress, setCurrentAddress] = useState('');
+  const [searchAddress, setSearchAddress] = useState('');
   const [destinationAddress, setDestinationAddress] = useState('');
   const [distance, setDistance] = useState(null);
   const [energyConsumption, setEnergyConsumption] = useState(null);
   const [newBatterylevel, setBatteryLevel] = useState(null);  
   const [remainingAutonomy, setRemainingAutonomy] = useState(null); 
+  const [destination, setDestination] = useState(null);
+  const [error, setError] = useState(null);
   
   const position = [latitude, longitude];
   const [route, setRoute] = useState([]);
+
+  const handleAddressSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${searchAddress}`);
+      if (response.data.length > 0) {
+        const { lat, lon } = response.data[0];
+        setDestination({ latitude: parseFloat(lat), longitude: parseFloat(lon) });
+      } else {
+        setError(new Error('Adresse non trouvée'));
+      }
+    } catch (error) {
+      setError(new Error('Erreur lors de la récupération des coordonnées'));
+    }
+  };
+
+  const handleReset = () => {
+    setSearchAddress('');
+    setDestination(null);
+  };
 
   useEffect(() => {
     const fetchAddress = async () => {
       try {
         const response = await axios.get(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
         const address = response.data.display_name || 'Adresse non trouvée';
-        setAddress(address);
+        setCurrentAddress(address);
       } catch (error) {
         console.error('Erreur lors de la récupération de l\'adresse:', error);
-        setAddress('Erreur lors de la récupération de l\'adresse');
+        setCurrentAddress('Erreur lors de la récupération de l\'adresse');
       }
     };
 
@@ -64,28 +87,23 @@ const Map = ({ latitude, longitude, destination, batteryLevel }) => {
           // Calcule de la consommation d'énergie
           const consumptionPer100Km = 15.4; // Consommation en kWh/100 km
           const energyConsumption = (distance / 1000) * (consumptionPer100Km / 100);
-          console.log(`l'energie consommé ${energyConsumption}`);
-
+          // console.log(`l'energie consommé ${energyConsumption}`);
           // Calcule de la batterie restante
           const remainingBattery = batteryLevel * 50;  // Batterie restante en kWh (50 kWh par exemple)
-          console.log(`la batterie restante ${remainingBattery} kWh`); 
-
+          // console.log(`la batterie restante ${remainingBattery} kWh`); 
           // Batterie restante après le trajet
           const remainingBatteryAfterTheRide = remainingBattery - energyConsumption;
-          console.log(`la batterie restante après le trajet ${remainingBatteryAfterTheRide} kWh`);
-
+          // console.log(`la batterie restante après le trajet ${remainingBatteryAfterTheRide} kWh`);
           // Calcule du pourcentage de batterie restante
           const newBatterylevel = (remainingBatteryAfterTheRide / 50) * 100;
-          console.log(`pourcentage batterie a l'arrivé ${newBatterylevel.toFixed(0)}`);
-
+          // console.log(`pourcentage batterie a l'arrivé ${newBatterylevel.toFixed(0)}`);
           // Mettre à jour l'état pour le pourcentage de batterie
           setBatteryLevel(newBatterylevel);
           // Metttre a jour la consommation d'energie
           setEnergyConsumption(energyConsumption); 
-
           // calcule de l'autonomie restante en Km
           const remainingAutonomy = (newBatterylevel / 100) * 400;
-          console.log(`L'autonomie restante a l'arrivée de destination ${remainingAutonomy} km`);
+          // console.log(`L'autonomie restante a l'arrivée de destination ${remainingAutonomy} km`);
           // Mettre à jour l'état pour l'autonomie restante en km
           setRemainingAutonomy(remainingAutonomy);
         } catch (error) {
@@ -112,7 +130,7 @@ const Map = ({ latitude, longitude, destination, batteryLevel }) => {
         <Marker position={position} icon={defaultIcon}>
           <Popup>
             Latitude: {latitude}, Longitude: {longitude}<br />
-            Adresse: {address}
+            Adresse: {currentAddress}
           </Popup>
         </Marker>
         {destination && (
@@ -127,6 +145,17 @@ const Map = ({ latitude, longitude, destination, batteryLevel }) => {
         )}
       </MapContainer>
       <div style={{ marginLeft: '20px', padding: '10px', border: '1px solid #ccc', width: '30%' }}>
+        {/* Formulaire pour saisir une adresse */}
+        <form onSubmit={handleAddressSubmit}>
+          <input
+            type="text"
+            value={searchAddress}
+            onChange={(e) => setSearchAddress(e.target.value)}
+            placeholder="Entrez une adresse"
+          />
+          <button type="submit">Valider</button>
+          {searchAddress && <button type="button" onClick={handleReset}>Réinitialiser</button>}
+        </form>
         <h3>Informations sur le trajet</h3>
         {distance !== null ? (
           <>
@@ -138,6 +167,7 @@ const Map = ({ latitude, longitude, destination, batteryLevel }) => {
         ) : (
           <p>Aucune destination définie</p>
         )}
+        
       </div>
     </div>
   );

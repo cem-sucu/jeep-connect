@@ -14,7 +14,6 @@ const App = () => {
   const [selectedVehicle, setSelectedVehicle] = useState({});
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [address, setAddress] = useState('');
   const [destination, setDestination] = useState(null);
 
   const onComplete = async (err, code, state) => {
@@ -130,26 +129,6 @@ const App = () => {
     }
   };
 
-  const handleAddressSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${address}`);
-      if (response.data.length > 0) {
-        const { lat, lon } = response.data[0];
-        setDestination({ latitude: parseFloat(lat), longitude: parseFloat(lon) });
-      } else {
-        setError(new Error('Adresse non trouvée'));
-      }
-    } catch (error) {
-      setError(new Error('Erreur lors de la récupération des coordonnées'));
-    }
-  };
-
-  const handleReset = () => {
-    setAddress('');
-    setDestination(null);
-  };
-
   return (
     <div className="content-wrapper">
       <div className="content">
@@ -158,6 +137,7 @@ const App = () => {
         {!isLoading &&
           ((vehicles.length > 0 && vehicles.some((vehicle) => vehicle.id === selectedVehicle.id)) ? (
             <>
+            {/* affichage des donée du véhicule */}
               <Vehicle
                 info={selectedVehicle}
                 disconnect={disconnect}
@@ -166,17 +146,6 @@ const App = () => {
                 updateProperty={updateProperty}
                 setError={setError}
               />
-              {/* Formulaire pour saisir une adresse */}
-              <form onSubmit={handleAddressSubmit}>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Entrez une adresse"
-                />
-                <button type="submit">Valider</button>
-                {address && <button type="button" onClick={handleReset}>Réinitialiser</button>}
-              </form>
               {/* Affichage de la carte avec les coordonnées du véhicule sélectionné et de la destination */}
               {selectedVehicle.location && (
                 <Map

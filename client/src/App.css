@@ -266,11 +266,18 @@ select.vehicles {
 
 
 /** ajout personel */
-@import 'leaflet/dist/leaflet.css';
 
+@import 'leaflet/dist/leaflet.css';
+/*: fichier properties.jsx */
 #lockUnlock, #disconnect {
   display: flex; /* Utiliser flexbox */
   justify-content: center; /* Centrer horizontalement */
   align-items: center; /* Centrer verticalement */
   height: 100%;
 }
+/*: properties.jsx */
+
+
+/*: maps.jsx */
+
+/*: maps.jsx */
