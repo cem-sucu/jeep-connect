@@ -177,7 +177,7 @@ const Map = ({ latitude, longitude, batteryLevel }) => {
         <TripInfoControl />
       </MapContainer>
       <div className="info-container">
-        <form onSubmit={handleAddressSubmit}>
+        <form className="formAdress" onSubmit={handleAddressSubmit}>
           <input
             type="text"
             value={searchAddress}
